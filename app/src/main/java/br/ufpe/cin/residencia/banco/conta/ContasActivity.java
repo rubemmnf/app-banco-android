@@ -31,8 +31,8 @@ public class ContasActivity extends AppCompatActivity {
                 v -> startActivity(new Intent(this, AdicionarContaActivity.class))
         );
 
-        viewModel.getContas().observe(this, contas -> {
-            adapter.setContas(contas);
+        viewModel.contas.observe(this, contas -> {
+            adapter.submitList(contas);
         });
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,9 +38,28 @@ public class AdicionarContaActivity extends AppCompatActivity {
                     String cpfCliente = campoCPF.getText().toString();
                     String numeroConta = campoNumero.getText().toString();
                     String saldoConta = campoSaldo.getText().toString();
-                    //TODO: Incluir validações aqui, antes de criar um objeto Conta (por exemplo, verificar que digitou um nome com pelo menos 5 caracteres, que o campo de saldo tem de fato um número, assim por diante). Se todas as validações passarem, aí sim cria a Conta conforme linha abaixo.
+
+                    if (nomeCliente.isEmpty() || cpfCliente.isEmpty() || numeroConta.isEmpty() || saldoConta.isEmpty()) {
+                        Toast.makeText(AdicionarContaActivity.this, "Todos os campos são obrigatórios.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Double saldo;
+                    try {
+                        saldo = Double.parseDouble(saldoConta);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(AdicionarContaActivity.this, "O campo saldo deve ser um número.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (nomeCliente.length() < 5) {
+                        Toast.makeText(AdicionarContaActivity.this, "O nome deve ter pelo menos 5 caracteres.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     Conta c = new Conta(numeroConta, Double.valueOf(saldoConta), nomeCliente, cpfCliente);
-                    //TODO: chamar o método que vai salvar a conta no Banco de Dados
+                    viewModel.inserir(c);
+                    finish();
                 }
         );
 
